@@ -1,9 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SQLite } from 'expo-sqlite';
 
+// Global variable for the database
+let db;
+
 export default function App() {
+  const [dbReady, setDbReady] = useState(false); // State to track db initialization
+
   useEffect(() => {
-    const db = SQLite.openDatabase("gallery.db");
+    // Open the database
+    db = SQLite.openDatabase("gallery.db");
 
     // Create table if it doesn't exist
     db.transaction(tx => {
@@ -16,8 +22,14 @@ export default function App() {
           timestamp TEXT
         );`,
         [],
-        () => console.log("Table created successfully"),
-        (_, error) => console.error("Error creating table", error)
+        () => {
+          console.log("Table created successfully");
+          setDbReady(true); // Mark the DB as ready after initialization
+        },
+        (_, error) => {
+          console.error("Error creating table", error);
+          setDbReady(false); // Mark the DB as not ready if there's an error
+        }
       );
     });
   }, []);
@@ -25,8 +37,13 @@ export default function App() {
   return null;
 }
 
-
+// Insert an image into the database
 export const insertImage = (uri, latitude, longitude, timestamp) => {
+  if (!db) {
+    console.error("Database not initialized");
+    return;
+  }
+  
   db.transaction((tx) => {
     tx.executeSql(
       "INSERT INTO images (uri, latitude, longitude, timestamp) VALUES (?, ?, ?, ?);",
@@ -37,7 +54,13 @@ export const insertImage = (uri, latitude, longitude, timestamp) => {
   });
 };
 
+// Get all images from the database
 export const getImages = (callback) => {
+  if (!db) {
+    console.error("Database not initialized");
+    return;
+  }
+
   db.transaction((tx) => {
     tx.executeSql(
       "SELECT * FROM images;",
@@ -48,7 +71,13 @@ export const getImages = (callback) => {
   });
 };
 
+// Delete an image from the database
 export const deleteImage = (id) => {
+  if (!db) {
+    console.error("Database not initialized");
+    return;
+  }
+
   db.transaction((tx) => {
     tx.executeSql(
       "DELETE FROM images WHERE id = ?;",
