@@ -4,11 +4,23 @@
     "slug": "gallery-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
+      "expo-sqlite",
+      "expo-secure-store"
+    ],
+    "icon": "./assets/png-clipart-computer-icons-scalable-graphics-gallery-icon-angle-text-thumbnail.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/favi.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,16 +29,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/png-clipart-computer-icons-scalable-graphics-gallery-icon-angle-text-thumbnail.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-sqlite",
-      "expo-secure-store"
-    ]
+      "favicon": "./assets/favi.png"
+    }
   }
 }
